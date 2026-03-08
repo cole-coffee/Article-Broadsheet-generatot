@@ -630,15 +630,19 @@ export default function Home() {
                 <p className="mb-4 text-sm text-red-500">{globalError}</p>
               )}
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <button
-                  type="button"
-                  onClick={() => void handleGeneratePdf()}
-                  disabled={isGenerating || !hasReadyArticles}
-                  className={`order-2 inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-semibold shadow-sm transition disabled:cursor-not-allowed sm:order-1
-                    bg- #3E78B2 text-white hover:bg- #34679a disabled:bg-neutral-400`}
-                >
-                  {isGenerating ? "Generating…" : "Generate PDF"}
-                </button>
+              <button
+                type="button"
+                onClick={() => void handleGeneratePdf()}
+                disabled={isGenerating || !hasReadyArticles}
+                style={{
+                  backgroundColor: isGenerating || !hasReadyArticles ? "#A1A1A1" : "#3E78B2",
+                  color: "white"
+                }}
+                className="order-2 inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-semibold shadow-sm transition disabled:cursor-not-allowed sm:order-1"
+              >
+                {isGenerating ? "Generating…" : "Generate PDF"}
+               </button>
+               
                 {downloadUrl && (
                   <a
                     href={downloadUrl}
