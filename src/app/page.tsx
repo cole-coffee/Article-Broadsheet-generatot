@@ -617,11 +617,8 @@ export default function Home() {
                   type="button"
                   onClick={() => void handleGeneratePdf()}
                   disabled={isGenerating || !hasReadyArticles}
-                  className={`order-2 inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-semibold shadow-sm transition disabled:cursor-not-allowed sm:order-1 ${
-                    isDark
-                      ? "bg-emerald-400 text-neutral-900 hover:bg-emerald-300 disabled:bg-neutral-600 disabled:text-neutral-300"
-                      : "bg-neutral-900 text-white hover:bg-neutral-800 disabled:bg-neutral-400"
-                  }`}
+                  className={`order-2 inline-flex items-center justify-center rounded-md px-6 py-3 text-base font-semibold shadow-sm transition disabled:cursor-not-allowed sm:order-1
+                    bg-#3E78B2 text-white hover:bg-emerald-400 disabled:bg-neutral-500`}
                 >
                   {isGenerating ? "Generating…" : "Generate PDF"}
                 </button>
