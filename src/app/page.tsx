@@ -142,17 +142,27 @@ export default function Home() {
   const [downloadFilename, setDownloadFilename] = useState<string | null>(null);
   const [globalError, setGlobalError] = useState<string | null>(null);
   const [isDark, setIsDark] = useState(false);
+  const [queueMessage, setQueueMessage] = useState<string | null>(null);
+
+  const MAX_ARTICLES = 3;
 
   const hasReadyArticles = useMemo(
     () => articles.some((a) => !a.loading && !a.error),
     [articles],
   );
 
+  const isAtArticleLimit = articles.length >= MAX_ARTICLES;
+
   const handleAddArticle = useCallback(async () => {
     const trimmed = urlInput.trim();
     if (!trimmed) return;
 
     try {
+      if (articles.length >= MAX_ARTICLES) {
+        setQueueMessage("Maximum of 3 articles allowed per broadsheet.");
+        return;
+      }
+
       let validatedUrl: string;
       try {
         const parsed = new URL(trimmed.startsWith("http") ? trimmed : `https://${trimmed}`);
@@ -163,6 +173,7 @@ export default function Home() {
       }
 
       setGlobalError(null);
+      setQueueMessage(null);
 
       const id = generateId();
       setArticles((prev) => [
@@ -228,7 +239,7 @@ export default function Home() {
         ),
       );
     }
-  }, [urlInput]);
+  }, [articles.length, urlInput]);
 
   const handleRemoveArticle = useCallback((id: string) => {
     setArticles((prev) => prev.filter((article) => article.id !== id));
@@ -237,6 +248,7 @@ export default function Home() {
       const remaining = articles.filter((article) => article.id !== id);
       return remaining[0]?.id ?? null;
     });
+    setQueueMessage(null);
   }, [articles]);
 
   const moveArticle = useCallback(
@@ -403,7 +415,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => void handleAddArticle()}
-                  disabled={!urlInput.trim()}
+                  disabled={!urlInput.trim() || isAtArticleLimit}
                   className={`inline-flex items-center justify-center rounded-md px-5 py-2.5 text-sm font-semibold shadow-sm transition disabled:cursor-not-allowed ${
                     isDark
                       ? "bg-neutral-100 text-neutral-900 hover:bg-white disabled:bg-neutral-600 disabled:text-neutral-300"
@@ -421,6 +433,11 @@ export default function Home() {
                 Paste article URLs to build your reading queue; each article is cleaned up
                 automatically.
               </p>
+              {queueMessage && (
+                <p className="mt-1 text-xs font-medium text-amber-700">
+                  {queueMessage}
+                </p>
+              )}
             </section>
 
             {/* Article list card */}
